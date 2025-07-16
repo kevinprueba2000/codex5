@@ -272,10 +272,6 @@ unset($rp);
                                 </li>
                                 <li class="mb-2">
                                     <i class="fas fa-check text-success me-2"></i>
-                                    Envío gratis en todo el país
-                                </li>
-                                <li class="mb-2">
-                                    <i class="fas fa-check text-success me-2"></i>
                                     Garantía de 30 días
                                 </li>
                                 <li class="mb-2">
@@ -327,10 +323,6 @@ unset($rp);
                         <!-- Shipping Info -->
                         <div class="shipping-info p-3 bg-light rounded">
                             <div class="row">
-                                <div class="col-md-6 mb-2">
-                                    <i class="fas fa-truck text-primary me-2"></i>
-                                    <span class="text-muted">Envío gratis</span>
-                                </div>
                                 <div class="col-md-6 mb-2">
                                     <i class="fas fa-shield-alt text-success me-2"></i>
                                     <span class="text-muted">Garantía 30 días</span>

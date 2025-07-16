@@ -337,10 +337,6 @@ $categories = $category->getAllCategories();
                                                 <span class="fw-bold text-primary">$<?php echo number_format($prod['price'], 0, ',', '.'); ?></span>
                                             <?php endif; ?>
                                         </div>
-                                        <small class="text-muted">
-                                            <i class="fas fa-truck me-1"></i>
-                                            Envío gratis
-                                        </small>
                                     </div>
                                     
                                     <div class="d-grid gap-2">
