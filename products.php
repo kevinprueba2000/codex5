@@ -291,7 +291,7 @@ $categories = $category->getAllCategories();
                                             -<?php echo $prod['discount_percentage']; ?>%
                                         </span>
                                     <?php endif; ?>
-                                    <?php if (isset($prod['featured']) && $prod['featured']): ?>
+                                    <?php if (isset($prod['is_featured']) && $prod['is_featured']): ?>
                                         <span class="badge bg-warning position-absolute top-0 end-0 m-2">
                                             <i class="fas fa-star"></i> Destacado
                                         </span>
