@@ -53,6 +53,11 @@ $product = new Product();
                 </ul>
                 
                 <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light btn-sm" id="darkModeToggle" title="Modo oscuro">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </li>
                     <li class="nav-item me-3">
                         <a class="nav-link position-relative active" href="cart.php">
                             <i class="fas fa-shopping-cart fs-5"></i>

@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeParallax();
     initializeCounters();
     initializeTypingEffect();
-    
+    initializeDarkMode();
+
     // Add loading screen
     hideLoadingScreen();
 });
@@ -411,6 +412,31 @@ function initializeTypingEffect() {
         
         observer.observe(element);
     });
+}
+
+// Dark Mode Toggle
+function initializeDarkMode() {
+    const toggle = document.getElementById('darkModeToggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const savedMode = localStorage.getItem('darkMode');
+
+    if (savedMode === 'enabled' || (savedMode === null && prefersDark)) {
+        document.body.classList.add('dark-mode');
+        if (toggle) toggle.innerHTML = '<i class="fas fa-sun"></i>';
+    }
+
+    if (toggle) {
+        toggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('darkMode', 'enabled');
+                toggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                localStorage.setItem('darkMode', 'disabled');
+                toggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        });
+    }
 }
 
 // Enhanced Notifications
