@@ -211,7 +211,7 @@ $totalPages = ceil($totalProducts / $limit);
                                             <i class="fas fa-heart"></i>
                                         </button>
                                     </div>
-                                    <?php if ($prod['discount_percentage'] > 0): ?>
+                                    <?php if (isset($prod['discount_percentage']) && $prod['discount_percentage'] > 0): ?>
                                         <span class="badge bg-danger position-absolute top-0 start-0 m-2 pulse">
                                             -<?php echo $prod['discount_percentage']; ?>%
                                         </span>
@@ -245,7 +245,7 @@ $totalPages = ceil($totalProducts / $limit);
                                     
                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                         <div class="price">
-                                            <?php if ($prod['discount_percentage'] > 0): ?>
+                                            <?php if (isset($prod['discount_percentage']) && $prod['discount_percentage'] > 0): ?>
                                                 <span class="text-decoration-line-through text-muted me-2">
                                                     $<?php echo number_format($prod['price'], 0, ',', '.'); ?>
                                                 </span>
@@ -256,10 +256,6 @@ $totalPages = ceil($totalProducts / $limit);
                                                 <span class="fw-bold text-primary">$<?php echo number_format($prod['price'], 0, ',', '.'); ?></span>
                                             <?php endif; ?>
                                         </div>
-                                        <small class="text-muted">
-                                            <i class="fas fa-truck me-1"></i>
-                                            Envío gratis
-                                        </small>
                                     </div>
                                     
                                     <div class="d-grid gap-2">
@@ -267,7 +263,7 @@ $totalPages = ceil($totalProducts / $limit);
                                             <i class="fas fa-cart-plus me-2"></i>
                                             Agregar al Carrito
                                         </button>
-                                        <a href="https://wa.me/593983015307?text=Hola%2C%20quiero%20comprar%20el%20producto:%20<?php echo urlencode($prod['name']); ?>%20-%20$<?php echo number_format($prod['discount_percentage'] > 0 ? $prod['price'] * (1 - $prod['discount_percentage'] / 100) : $prod['price'], 0, ',', '.'); ?>%20-%20AlquimiaTechnologic" 
+                                        <a href="https://wa.me/593983015307?text=Hola%2C%20quiero%20comprar%20el%20producto:%20<?php echo urlencode($prod['name']); ?>%20-%20$<?php echo number_format((isset($prod['discount_percentage']) && $prod['discount_percentage'] > 0) ? $prod['price'] * (1 - $prod['discount_percentage'] / 100) : $prod['price'], 0, ',', '.'); ?>%20-%20AlquimiaTechnologic"
                                            class="btn btn-success btn-sm hover-lift" target="_blank">
                                             <i class="fab fa-whatsapp me-2"></i>
                                             Comprar por WhatsApp
