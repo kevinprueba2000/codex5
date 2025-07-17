@@ -235,8 +235,8 @@ Si no cuentas con un servidor MySQL disponible, puedes ejecutar las pruebas usan
    ```bash
    USE_SQLITE=1 php -f check_database_connection.php
    USE_SQLITE=1 php -f test_system.php
-USE_SQLITE=1 php -f test_upload_simple.php
-```
+   USE_SQLITE=1 php -f test_upload_simple.php
+   ```
 
 ## 🌐 Publicar en InfinityFree
 
@@ -247,6 +247,13 @@ Si deseas alojar la tienda en un hosting gratuito, puedes usar [InfinityFree](ht
 3. Importa el archivo `database/alquimia_db.sql` desde phpMyAdmin. Si es necesario elimina las líneas `CREATE DATABASE` y `USE` antes de importar.
 4. Sube todos los archivos del proyecto a la carpeta `htdocs` o `public_html` de tu cuenta.
 5. Edita `config/config.php` y reemplaza `DB_HOST`, `DB_NAME`, `DB_USER` y `DB_PASS` con los valores proporcionados por InfinityFree.
+   Por ejemplo:
+   ```php
+   define('DB_HOST', 'sql306.infinityfree.com');
+   define('DB_NAME', 'if0_39489683_alquimia_technologic');
+   define('DB_USER', 'if0_39489683');
+   define('DB_PASS', 'TU_PASSWORD');
+   ```
 6. Abre tu subdominio y verifica que la aplicación funcione correctamente.
 
 
