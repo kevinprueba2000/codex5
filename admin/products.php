@@ -167,7 +167,8 @@ $editProductId = isset($_GET['edit']) ? intval($_GET['edit']) : 0;
                                             <td><?php echo $prod['id']; ?></td>
                                             <td>
                                                 <?php 
-                                                $imageUrl = '../assets/images/placeholder.jpg';
+                                                // Usar ruta sin "../" para evitar problemas con open_basedir
+                                                $imageUrl = 'assets/images/placeholder.jpg';
                                                 if (!empty($prod['images'])) {
                                                     $images = json_decode($prod['images'], true);
                                                     if ($images && is_array($images) && !empty($images[0])) {
@@ -181,7 +182,7 @@ $editProductId = isset($_GET['edit']) ? intval($_GET['edit']) : 0;
                                                 
                                                 // Si es una imagen local, verificar que existe y no esté vacía
                                                 if ($localPath && (!file_exists($localPath) || filesize($localPath) < 100)) {
-                                                    $imageUrl = '../assets/images/placeholder.jpg';
+                                                    $imageUrl = 'assets/images/placeholder.jpg';
                                                     $imgPath = '../assets/images/placeholder.jpg';
                                                 }
                                                 ?>
