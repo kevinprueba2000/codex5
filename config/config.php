@@ -19,10 +19,11 @@ define('SITE_NAME', 'AlquimiaTechnologic');
 define('ADMIN_EMAIL', 'admin@alquimiatechnologic.com');
 
 // Configuración de la base de datos
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'alquimia_technologic');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+// Datos de conexión para InfinityFree
+define('DB_HOST', 'sql308.infinityfree.com');
+define('DB_NAME', 'if0_39489517_alquimia_technologic');
+define('DB_USER', 'if0_39489517');
+define('DB_PASS', 'Q9IZLrTWuf');
 
 require_once __DIR__ . '/database.php';
 
