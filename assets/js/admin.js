@@ -424,6 +424,9 @@ function updateImagesJson() {
             } else if (hiddenInput.id === 'heroImagesJson') {
                 const urlInput = document.getElementById('heroImageUrl');
                 if (urlInput) urlInput.value = images[0] || '';
+            } else if (hiddenInput.id === 'aboutImagesJson') {
+                const urlInput = document.getElementById('aboutImageUrl');
+                if (urlInput) urlInput.value = images[0] || '';
             }
         }
     });

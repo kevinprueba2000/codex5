@@ -11,6 +11,7 @@ $settings = [
     'site_name' => 'AlquimiaTechnologic',
     'site_description' => 'Especialistas en software personalizado, aceites esenciales y figuras artesanales',
     'hero_image_url' => 'assets/images/placeholder.jpg',
+    'about_image_url' => 'assets/images/placeholder.jpg',
     'contact_email' => 'kevinmoyolema13@gmail.com',
     'contact_phone' => '+593 983015307',
     'whatsapp_number' => '+593 983015307',
@@ -279,6 +280,31 @@ $settings = [
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Imagen "Nuestra Historia"</label>
+                                                    <input type="text" class="form-control mb-2" name="about_image_url" id="aboutImageUrl" value="<?php echo $settings['about_image_url']; ?>" placeholder="URL o subir imagen">
+                                                    <div class="upload-section">
+                                                        <div class="mb-2">
+                                                            <input type="file" id="aboutFileUpload" name="about_file" accept="image/*" class="form-control" style="display: none;">
+                                                            <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('aboutFileUpload').click()">
+                                                                <i class="fas fa-folder-open me-2"></i>Seleccionar Imagen
+                                                            </button>
+                                                        </div>
+                                                        <div id="aboutSelectedImagePreview" class="mb-3" style="display: none;">
+                                                            <h6>Imagen Seleccionada:</h6>
+                                                            <div class="selected-images-container"></div>
+                                                            <button type="button" class="btn btn-success mt-2" onclick="uploadAboutImage()">
+                                                                <i class="fas fa-cloud-upload-alt me-2"></i>Subir Imagen
+                                                            </button>
+                                                        </div>
+                                                        <div id="aboutImagePreview" class="image-preview mt-2"></div>
+                                                    </div>
+                                                    <input type="hidden" id="aboutImagesJson">
+                                                </div>
+                                            </div>
+                                        </div>
                                         </form>
                                     </div>
 
@@ -518,6 +544,7 @@ $settings = [
             const logoFileUpload = document.getElementById('logoFileUpload');
             const faviconFileUpload = document.getElementById('faviconFileUpload');
             const heroFileUpload = document.getElementById('heroFileUpload');
+            const aboutFileUpload = document.getElementById('aboutFileUpload');
             
             if (logoFileUpload) {
                 logoFileUpload.addEventListener('change', function(e) {
@@ -534,6 +561,12 @@ $settings = [
             if (heroFileUpload) {
                 heroFileUpload.addEventListener('change', function(e) {
                     handleSettingsImageSelection(e.target.files, 'heroSelectedImagePreview');
+                });
+            }
+
+            if (aboutFileUpload) {
+                aboutFileUpload.addEventListener('change', function(e) {
+                    handleSettingsImageSelection(e.target.files, 'aboutSelectedImagePreview');
                 });
             }
         }
@@ -731,6 +764,61 @@ $settings = [
 
                     heroFileUpload.value = '';
                     document.getElementById('heroSelectedImagePreview').style.display = 'none';
+
+                    showNotification('Imagen subida correctamente', 'success');
+                } else {
+                    const msg = data.errors && data.errors.length ? data.errors.join('; ') : data.message;
+                    showNotification('Error al subir imagen: ' + msg, 'error');
+                }
+            })
+            .catch(error => {
+                progressBar.remove();
+                showNotification('Error al subir imagen: ' + error.message, 'error');
+                console.error('Upload error:', error);
+            });
+        }
+
+        // Subir imagen de "Nuestra Historia"
+        function uploadAboutImage() {
+            const aboutFileUpload = document.getElementById('aboutFileUpload');
+
+            if (!aboutFileUpload || !aboutFileUpload.files.length) {
+                alert('Por favor selecciona una imagen');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('images[]', aboutFileUpload.files[0]);
+            formData.append('csrf_token', csrfToken);
+            formData.append('folder', 'settings');
+
+            const preview = document.getElementById('aboutImagePreview');
+
+            const progressBar = document.createElement('div');
+            progressBar.className = 'upload-progress';
+            progressBar.innerHTML = '<div class="upload-progress-bar" style="width: 0%"></div>';
+            preview.appendChild(progressBar);
+
+            fetch('../admin/upload_handler_simple.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                progressBar.remove();
+
+                if (data.success) {
+                    preview.innerHTML = '';
+                    data.files.forEach(file => {
+                        const item = createImagePreviewItem(file.thumbnail, file.original);
+                        preview.appendChild(item);
+                    });
+
+                    document.getElementById('aboutImageUrl').value = data.files[0].original;
+                    updateImagesJson();
+
+                    aboutFileUpload.value = '';
+                    document.getElementById('aboutSelectedImagePreview').style.display = 'none';
 
                     showNotification('Imagen subida correctamente', 'success');
                 } else {

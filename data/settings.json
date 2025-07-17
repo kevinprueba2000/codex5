@@ -14,5 +14,6 @@
   "favicon_url": "",
   "maintenance_mode": false,
   "allow_registration": true,
-  "email_notifications": true
+  "email_notifications": true,
+  "about_image_url": "assets/images/placeholder.jpg"
 }

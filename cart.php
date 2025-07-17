@@ -264,7 +264,9 @@ $product = new Product();
     
     <script>
         AOS.init();
-        
+
+        let cartProducts = [];
+
         // Cart functionality
         function loadCart() {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -286,55 +288,55 @@ $product = new Product();
                 return;
             }
             
-            // Simulate loading cart items (in real app, this would fetch from API)
-            let cartHTML = '';
-            let total = 0;
-            
-            cart.forEach((item, index) => {
-                // Simulate product data (in real app, this would come from database)
-                const product = {
-                    id: item.id,
-                    name: `Producto ${item.id}`,
-                    price: 99000,
-                    image: 'assets/images/placeholder.jpg'
-                };
-                
-                const itemTotal = product.price * item.quantity;
-                total += itemTotal;
-                
-                cartHTML += `
-                    <div class="row align-items-center mb-3 cart-item" data-id="${item.id}">
-                        <div class="col-md-2">
-                            <img src="${product.image}" alt="${product.name}" class="img-fluid rounded" style="width: 80px; height: 80px; object-fit: cover;">
-                        </div>
-                        <div class="col-md-4">
-                            <h6 class="mb-1">${product.name}</h6>
-                            <small class="text-muted">ID: ${product.id}</small>
-                        </div>
-                        <div class="col-md-2">
-                            <span class="fw-bold">$${product.price.toLocaleString()}</span>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="input-group input-group-sm">
-                                <button class="btn btn-outline-secondary" onclick="updateQuantity(${item.id}, -1)">-</button>
-                                <input type="number" class="form-control text-center" value="${item.quantity}" min="1" onchange="updateQuantity(${item.id}, this.value - ${item.quantity})">
-                                <button class="btn btn-outline-secondary" onclick="updateQuantity(${item.id}, 1)">+</button>
+            const ids = cart.map(i => i.id);
+            fetch('api/get_products.php?ids=' + ids.join(','))
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.success) throw new Error('Error al cargar productos');
+                    cartProducts = data.products || [];
+
+                    let cartHTML = '';
+                    cartProducts.forEach(prod => {
+                        const item = cart.find(c => c.id == prod.id);
+                        if (!item) return;
+                        const itemTotal = prod.price * item.quantity;
+                        cartHTML += `
+                            <div class="row align-items-center mb-3 cart-item" data-id="${prod.id}">
+                                <div class="col-md-2">
+                                    <img src="${prod.image}" alt="${prod.name}" class="img-fluid rounded" style="width: 80px; height: 80px; object-fit: cover;">
+                                </div>
+                                <div class="col-md-4">
+                                    <h6 class="mb-1">${prod.name}</h6>
+                                    <small class="text-muted">ID: ${prod.id}</small>
+                                </div>
+                                <div class="col-md-2">
+                                    <span class="fw-bold">$${prod.price.toLocaleString()}</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="input-group input-group-sm">
+                                        <button class="btn btn-outline-secondary" onclick="updateQuantity(${prod.id}, -1)">-</button>
+                                        <input type="number" class="form-control text-center" value="${item.quantity}" min="1" onchange="updateQuantity(${prod.id}, this.value - ${item.quantity})">
+                                        <button class="btn btn-outline-secondary" onclick="updateQuantity(${prod.id}, 1)">+</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <span class="fw-bold">$${itemTotal.toLocaleString()}</span>
+                                </div>
+                                <div class="col-md-1">
+                                    <button class="btn btn-outline-danger btn-sm" onclick="removeFromCart(${prod.id})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-2">
-                            <span class="fw-bold">$${itemTotal.toLocaleString()}</span>
-                        </div>
-                        <div class="col-md-1">
-                            <button class="btn btn-outline-danger btn-sm" onclick="removeFromCart(${item.id})">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            cartContainer.innerHTML = cartHTML;
-            updateCartSummary();
+                        `;
+                    });
+
+                    cartContainer.innerHTML = cartHTML;
+                    updateCartSummary();
+                })
+                .catch(() => {
+                    cartContainer.innerHTML = '<p class="text-danger">Error al cargar los productos.</p>';
+                });
         }
         
         function updateQuantity(productId, change) {
@@ -360,13 +362,20 @@ $product = new Product();
         
         function updateCartSummary() {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const total = cart.reduce((sum, item) => sum + (99000 * item.quantity), 0);
-            
+            let total = 0;
+            cart.forEach(item => {
+                const prod = cartProducts.find(p => p.id == item.id);
+                if (prod) total += prod.price * item.quantity;
+            });
+
             document.getElementById('subtotal').textContent = `$${total.toLocaleString()}`;
             document.getElementById('total').textContent = `$${total.toLocaleString()}`;
-            
-            // Update WhatsApp link with cart items
-            const cartItems = cart.map(item => `Producto ${item.id} x${item.quantity}`).join(', ');
+
+            const cartItems = cart.map(item => {
+                const prod = cartProducts.find(p => p.id == item.id);
+                const name = prod ? prod.name : 'Producto ' + item.id;
+                return `${name} x${item.quantity}`;
+            }).join(', ');
             const whatsappLink = `https://wa.me/593983015307?text=Hola%2C%20quiero%20completar%20mi%20compra%20del%20carrito%20de%20AlquimiaTechnologic%20-%20${encodeURIComponent(cartItems)}%20-%20Total:%20$${total.toLocaleString()}`;
             document.getElementById('whatsapp-checkout').href = whatsappLink;
         }

@@ -10,6 +10,10 @@ if (file_exists($teamFile)) {
         $teamMembers = $data;
     }
 }
+$aboutImage = getSiteSetting('about_image_url', 'assets/images/placeholder.jpg');
+if ($aboutImage && strpos($aboutImage, 'http') !== 0) {
+    $aboutImage = rtrim(SITE_URL, '/') . '/' . ltrim($aboutImage, '/');
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -162,7 +166,7 @@ if (file_exists($teamFile)) {
                     </div>
                 </div>
                 <div class="col-lg-6" data-aos="fade-left">
-                    <img src="assets/images/placeholder.jpg"
+                    <img src="<?php echo htmlspecialchars($aboutImage); ?>"
                            alt="Nuestra Historia" class="img-fluid rounded-custom shadow-lg">
                 </div>
             </div>
